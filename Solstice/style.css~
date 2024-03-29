@@ -1,0 +1,39 @@
+@font-face {
+    font-family: BlackwoodCastle;
+    src: url(font/BlackwoodCastle.ttf);
+}
+
+body {
+    background-color: #000000;
+}
+
+canvas {
+    outline: none;
+    image-rendering: optimizeQuality;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    -ms-interpolation-mode: nearest-neighbor;  
+}
+
+#gameDiv {
+    position: static;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+p {
+    font-family: BlackwoodCastle;
+    color: #c4a000;
+}
+
+h1 {
+    position: static;
+    text-align: center;
+    margin-right: auto;
+    font-family: BlackwoodCastle;
+    color: #c4a000;
+}

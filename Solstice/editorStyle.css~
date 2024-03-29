@@ -1,0 +1,121 @@
+#stageDiv {
+    color: #FFFF66;
+    background-color: #000000;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 1340px;
+    border: 4px solid;
+}
+
+#sideDiv {
+    position: fixed;
+    width: 20%;
+    height: 100%;
+    right: 5px;
+}
+
+#formsDiv {
+    color: #FFFF66;
+    background-color: #191919;
+    position: relative;
+    height: 50%;
+    border: 4px solid;
+}
+
+#forms {
+    border: 4px solid;
+    overflow-y: scroll;
+    position: relative;
+    height: 80%;
+}
+
+#optionDiv {
+    color: #FFFF66;
+    background-color: #191919;
+    position: relative;
+    border: 4px solid;
+}
+
+#commandDiv {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+    position: relative;
+}
+
+.form {
+    color: #FF0000;
+    margin: 5px;
+    background-color: #191919;
+}
+
+.selectedForm {
+    color: #FF0000;
+    background-color: #4b0e0e;
+    border: 1px solid;
+}
+
+fieldset {
+    display: inline;
+}
+
+#layerUp {
+    background-position: -100px 0; 
+    background-image: url('commandSprite/commandSprite0.gif');
+    margin-left: 20px;
+}
+
+#layerDown {
+    background-position: -150px 0;
+    background-image: url('commandSprite/commandSprite0.gif');
+}
+
+#switchShowGrid {
+    background-position: -50px 0;
+    background-image: url('commandSprite/commandSprite0.gif');
+}
+
+#switchAction {
+    background-position: 0 0;
+    background-image: url('commandSprite/commandSprite0.gif');
+}
+
+#layerUp:active {
+    background-position: -100px 0; 
+    background-image: url('commandSprite/commandSprite1.gif');
+    margin-left: 20px;
+}
+
+#layerDown:active {
+    background-position: -150px 0;
+    background-image: url('commandSprite/commandSprite1.gif');
+}
+
+.option:hover {
+    background-color: #4b0e0e;
+}
+
+.option {
+    border: 0 none;
+    width: 50px;
+    height: 46px;
+    background-color: #191919;
+    background-repeat: no-repeat;
+}
+
+#output {
+    -webkit-align-self: center; /* Safari 7.0+ */
+    align-self: center;
+    align-item: center;
+    align-content: center;
+}
+
+.divTitle {
+    text-align: center;
+}
+
+canvas {
+    outline: none;
+}

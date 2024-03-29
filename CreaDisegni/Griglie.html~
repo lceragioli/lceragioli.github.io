@@ -1,0 +1,247 @@
+<!doctype html>
+<html>
+<head>
+  <title>Editor di griglie</title>
+  <script>
+
+    var cellule = [];
+    var righe = 0;
+    var colonne = 0;
+
+    var disegnando = false;
+    var latoCella = 0;
+
+    var canvas = null;
+    var ctx = null;
+
+
+    function disegnaStatoTex(stato, rect) {
+        switch (stato) {
+            case 0 :
+                return "";
+                break;
+            case 1 :
+                return "\\fill (" + rect.x1 + "," + rect.y1 + ") rectangle (" + rect.x2 + "," + rect.y2 + ");\n";
+                break;
+            case 2 :
+                var l12 = rect.x2 - rect.x1;
+                var l2 = l12 / 6;
+                var l4 = l12 / 3;
+                var l6 = l12 / 2;
+                var l8 = l12 - (l12 / 3);
+                var l10 = l12 - (l12 / 6);
+
+                var p0  = "(" + rect.x1 +                          "," + rect.y1 +                    ")";
+                var p1  = "(" + rect.x1 +                          "," + (l2 + eval(rect.y1)).toFixed(4) +  ")";
+                var p2  = "(" + (l4 + eval(rect.x1)).toFixed(4) +  "," + (l6 + eval(rect.y1)).toFixed(4) +  ")";
+                var p3  = "(" + rect.x1 +                          "," + (l10 + eval(rect.y1)).toFixed(4) + ")";
+                var p4  = "(" + rect.x1 +                          "," + rect.y2 +                    ")";
+                var p5  = "(" + (l2 + eval(rect.x1)).toFixed(4) +  "," + rect.y2 +                    ")";
+                var p6  = "(" + (l6 + eval(rect.x1)).toFixed(4) +  "," + (l8 + eval(rect.y1)).toFixed(4) +  ")";
+                var p7  = "(" + (l10 + eval(rect.x1)).toFixed(4) + "," + rect.y2 +                    ")";
+                var p8  = "(" + rect.x2 +                          "," + rect.y2 +                    ")";
+                var p9  = "(" + rect.x2 +                          "," + (l10 + eval(rect.y1)).toFixed(4) + ")";
+                var p10 = "(" + (l8 + eval(rect.x1)).toFixed(4) +  "," + (l6 + eval(rect.y1)).toFixed(4) +  ")";
+                var p11 = "(" + rect.x2 +                          "," + (l2 + eval(rect.y1)).toFixed(4) +  ")";
+                var p12 = "(" + rect.x2 +                          "," + rect.y1 +                    ")";
+                var p13 = "(" + (l10 + eval(rect.x1)).toFixed(4) + "," + rect.y1 +                    ")";
+                var p14 = "(" + (l6 + eval(rect.x1)).toFixed(4) +  "," + (l4 + eval(rect.y1)).toFixed(4) +  ")";
+                var p15 = "(" + (l2 + eval(rect.x1)).toFixed(4) +  "," + rect.y1 +                    ")";
+
+
+                return "\\fill " + p0 + " -- " + p1 + " -- " + p2 + " -- " + p3 + " -- " + p4 + " -- " + p5 +
+                         " -- " + p6 + " -- " + p7 + " -- " + p8 + " -- " + p9 + " -- " + p10 + " -- " + p11 + 
+                         " -- " + p12 + " -- " + p13 + " -- " + p14 + " -- " + p15 + ";\n";
+                break;
+        }
+    }
+
+    function disegnaStatoCan(stato, i, j) {
+        
+        ctx.save();        
+        ctx.beginPath();
+        ctx.rect(latoCella * j + Math.ceil(ctx.lineWidth/2), latoCella * i + Math.ceil(ctx.lineWidth/2), latoCella - ctx.lineWidth - 1, latoCella - ctx.lineWidth - 1);
+        ctx.clip();
+
+        switch (stato) {
+            case 0 :
+                ctx.fillStyle = "white";
+                ctx.fillRect(latoCella * j, latoCella * i, latoCella, latoCella);
+                break;
+            case 1 :
+                ctx.fillStyle = "black";
+                ctx.fillRect(latoCella * j, latoCella * i, latoCella, latoCella);
+                break;
+            case 2 :
+                ctx.fillStyle = "black";
+                ctx.fillRect(latoCella * j, latoCella * i, latoCella, latoCella);
+                ctx.fillStyle = "white";
+
+                aggiungiTriangolo = function(c) {
+                        c.moveTo(0, 0);
+                        c.lineTo(0, latoCella/6);
+                        c.lineTo(latoCella/3, latoCella/2);
+                        c.lineTo(0, latoCella - (latoCella/6));
+                        c.lineTo(0, latoCella);
+                    };
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.translate(latoCella * j, latoCella * i);
+
+                aggiungiTriangolo(ctx);
+
+                ctx.translate(latoCella, 0);
+                ctx.rotate(Math.PI / 2);                  
+                aggiungiTriangolo(ctx);
+
+                ctx.translate(latoCella, 0);
+                ctx.rotate(Math.PI / 2);    
+                aggiungiTriangolo(ctx);
+
+                ctx.translate(latoCella, 0);
+                ctx.rotate(Math.PI / 2);    
+                aggiungiTriangolo(ctx);
+            
+                ctx.fill();
+                ctx.restore();
+        }
+
+        ctx.restore();
+
+    }
+
+    function esporta() {
+        var out = document.getElementById("output");
+        var step = 0 + eval(document.getElementById("step").value);
+
+        var r;
+        var c;
+        var val = "";
+        for(r = 0; r < righe; r++) {
+            for(c = 0; c < colonne; c++) {
+                var rect = {x1: (c * step).toFixed(4),
+                            y1: ((righe - r - 1) * step).toFixed(4),
+                            x2: ((c + 1) * step).toFixed(4),
+                            y2: ((righe - r) * step).toFixed(4)
+                    }
+                    val += disegnaStatoTex(cellule[r][c], rect);
+            }
+        }
+
+        val += "\\draw [ultra thick, white] (0,0) grid [step=" + step + "] (" + (step * colonne).toFixed(4) + "," + (step * righe).toFixed(4) + ");\n";
+        val += "\\draw (0,0) grid [step=" + step + "] (" + (step * colonne).toFixed(4) + "," + (step * righe).toFixed(4) + ");\n";
+
+        out.value = val;
+    }
+
+    function disegnaCellula(mouseX, mouseY) {
+        var stato = 0 + eval(document.getElementById("stato").value);
+        var i = Math.floor(mouseY / latoCella);
+        var j = Math.floor(mouseX / latoCella);
+
+        if(i < righe && j < colonne && cellule[i][j] != stato) {
+            cellule[i][j] = stato;
+            disegnaStatoCan(stato, i, j);
+        }
+    }
+
+    function iniziaDisegna(e) {
+        disegnando = true;
+
+	    var mouseX = Math.round(e.pageX - window.pageXOffset - (canvas.getBoundingClientRect().left));
+	    var mouseY = Math.round(e.pageY - window.pageYOffset - (canvas.getBoundingClientRect().top));
+    
+        disegnaCellula(mouseX, mouseY);
+    }
+
+    function stopDisegna() {
+        disegnando = false;
+    }
+
+    function disegna(e) {
+        if(disegnando) {
+    	    var mouseX = Math.round(e.pageX - window.pageXOffset - (canvas.getBoundingClientRect().left));
+	        var mouseY = Math.round(e.pageY - window.pageYOffset - (canvas.getBoundingClientRect().top));
+    
+            disegnaCellula(mouseX, mouseY);
+        }
+    }
+
+    function creaGriglia() {
+        righe = 0 + eval(document.getElementById("righe").value);
+        colonne = 0 + eval(document.getElementById("colonne").value);
+        canvasWidth = document.getElementById("larghezza").value;
+        canvasHeight = document.getElementById("altezza").value;       
+
+        canvas = document.getElementById("can");
+        ctx = canvas.getContext("2d");
+        canvas.setAttribute("width", canvasWidth);
+        canvas.setAttribute("height", canvasHeight);
+        if(!ctx){
+            alert("Il tuo browser non supporta HTML5, aggiornalo!");
+        }
+
+
+        for(var i = 0; i < righe; i++) {
+            cellule[i] = [];
+            for(var j = 0; j < colonne; j++) {
+                cellule[i][j] = 0;
+            }
+        }
+
+        latoCella = Math.min(canvas.width / colonne, canvas.height / righe);
+
+        ctx.beginPath();
+        for(var i = righe; i >= 0; i--) {
+            ctx.moveTo(0, i*latoCella);
+            ctx.lineTo(colonne*latoCella, i*latoCella);
+        }
+
+        for(var j = colonne; j >= 0; j--) {
+            ctx.moveTo(j*latoCella, 0);
+            ctx.lineTo(j*latoCella, righe*latoCella);
+        }
+        ctx.stroke();
+    }
+
+  </script>
+</head>
+<body>
+
+  <div>
+    <fieldset>
+      <legend>Griglia</legend>
+      Righe: <input id="righe"/><br>
+      Colonne: <input id="colonne"/><br>
+      Larghezza Canvas: <input id="larghezza" value="1000"/><br>
+      Altezza Canvas: <input id="altezza" value="1000"/><br>
+      <input type="button" id="griglia" value="crea griglia"/>
+    </fieldset>
+  </div>
+  <div>
+    <fieldset>
+      <legend>Esportazione</legend>
+      Step: <input id="step"/><br>
+      <input type="button" id="esporta" value="esporta immagine"/>
+      <textarea id="output" rows="10" cols="60">output</textarea>
+    </fieldset>
+  </div>
+  <div>
+    <fieldset>
+      <legend>Automa Cellulare</legend>
+      Stato: <input id="stato"/><br>
+    </fieldset>
+  </div>
+  <div>
+    <canvas id="can" width="1000" height="1000" style="border:1px solid #000000;"></canvas>
+  </div>
+  <script>
+    document.getElementById("esporta").addEventListener("click", esporta);
+    document.getElementById("griglia").addEventListener("click", creaGriglia);
+    document.getElementById("can").addEventListener("mousedown", iniziaDisegna);
+    document.getElementById("can").addEventListener("mouseup", stopDisegna);
+    document.getElementById("can").addEventListener("mousemove", disegna);
+  </script>
+
+</body>

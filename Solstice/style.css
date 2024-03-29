@@ -1,0 +1,34 @@
+@font-face {
+    font-family: BlackwoodCastle;
+    src: url(font/BlackwoodCastle.ttf);
+}
+
+body {
+    background-color: #000000;
+}
+
+canvas {
+    outline: none;
+}
+
+#gameDiv {
+    position: static;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+p {
+    font-family: BlackwoodCastle;
+    color: #c4a000;
+}
+
+h1 {
+    position: static;
+    text-align: center;
+    margin-right: auto;
+    font-family: BlackwoodCastle;
+    color: #c4a000;
+}

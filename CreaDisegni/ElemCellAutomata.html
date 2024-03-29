@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<head>
+  <title>ECA Editor</title>
+  <script>
+
+    function configRandom() {
+
+        var numCellule = 0 + eval(document.getElementById("numCellule").value);
+        var viveIniziali = eval(document.getElementById("iniziale"));
+        
+        var s = "[";
+        for(var i = 0; i < numCellule; i++) {
+            if(Math.random() < 0.5) {
+                if(s != "[") { s += ", "; }
+                s += i;
+            }
+        }
+        s += "]";
+
+        viveIniziali.value = s;
+
+    }
+
+    function calcolaRegola(numRegola) {
+
+        var bits = [];
+        var num = numRegola;
+        bits[0] = Math.floor(numRegola/128);
+        for(var i = 1; i < 8; i++) {
+            num = num - (bits[i-1] * Math.pow(2,8-i));
+            bits[i] = Math.floor(num/Math.pow(2,7-i));
+        }
+
+        var regola = function(s1, s2, s3) {
+            switch("" + s1 + "" + s2 + "" + s3) {
+                case ("111") :
+                    return bits[0];
+                    break;
+                case ("110") :
+                    return bits[1];
+                    break;
+                case ("101") :
+                    return bits[2];
+                    break;
+                case ("100") :
+                    return bits[3];
+                    break;
+                case ("011") :
+                    return bits[4];
+                    break;
+                case ("010") :
+                    return bits[5];
+                    break;
+                case ("001") :
+                    return bits[6];
+                    break;
+                case ("000") :
+                    return bits[7];
+                    break;
+                default :
+                    alert("errore!");
+            }
+        }
+    return regola;
+    }
+
+    function crea() {
+        var generazioni = 0 + eval(document.getElementById("generazioni").value);
+        var numCellule = 0 + eval(document.getElementById("numCellule").value);
+        var viveIniziali = eval(document.getElementById("iniziale").value);
+        var regola = calcolaRegola(document.getElementById("regola").value);
+        var out = document.getElementById("output");
+        var step = document.getElementById("step").value;
+
+        var colonne = numCellule + 2 * (generazioni - 1);
+
+        var celle = [];
+        celle[1] = [];
+
+        var i = colonne - 1;
+        for(; i >= 0; i--) {
+            celle[1][i] = 0;
+        }
+        viveIniziali.forEach(function(item, index, array) {
+                celle[1][item + generazioni - 1] = 1;        
+        });
+
+        var gen;
+        var cell;
+        for(gen = 2; gen <= generazioni; gen++) {
+            celle[gen] = [];
+            for(cell = gen - 1; cell <= colonne - gen; cell++) {
+                celle[gen][cell] = regola(celle[gen - 1][cell - 1], celle[gen - 1][cell], celle[gen - 1][cell + 1]);
+            }
+        }
+
+        var canvas = document.getElementById("outCan");
+        var ctx = canvas.getContext("2d");
+        canvas.setAttribute("width","500");
+        canvas.setAttribute("height","500");
+        if(!ctx){
+            alert("Il tuo browser non supporta HTML5, aggiornalo!");
+        }
+        var scale = Math.min(canvas.width / numCellule, canvas.height / generazioni) / step;
+        var dx = (canvas.width - numCellule * step * scale) / 2;
+        var dy = (canvas.height - generazioni * step * scale) / 2;
+
+        ctx.scale(1, -1);
+        ctx.translate(dx, -canvas.height +dy);
+        ctx.fillStyle = "#000000";
+        ctx.beginPath();
+
+        var rect = null;
+        var val = "\\draw (0,0) grid [step=" + step + "] (" + (step * numCellule).toFixed(4) + "," + (step * generazioni).toFixed(4) + ");\n";
+        for(gen = 1; gen <= generazioni; gen++) {
+            for(cell = generazioni - 1; cell < numCellule + generazioni - 1; cell++) {
+                if(celle[gen][cell] == 1) {
+                    var rect = {x1: ((cell - generazioni + 1) * step).toFixed(4),
+                                y1: ((generazioni - gen) * step).toFixed(4),
+                                x2: ((cell - generazioni + 2) * step).toFixed(4),
+                                y2: ((generazioni - gen + 1) * step).toFixed(4)
+                        }
+                    val += "\\fill (" + rect.x1 + "," + rect.y1 + ") rectangle (" + rect.x2 + "," + rect.y2 + ");\n";
+                    
+                    ctx.rect(scale * rect.x1, scale * rect.y1, scale * step, scale * step);
+                }
+            }
+        }
+
+        out.value = val;
+        ctx.closePath();
+        ctx.fill();
+    }
+  </script>
+</head>
+<body>
+
+  <div>
+    <fieldset>
+      <legend></legend>
+      Generazioni: <input id="generazioni"/><br>
+      Cellule: <input id="numCellule"/><br>
+      Regola: <input id="regola"/><br>
+      Cellule vive iniziali: <input id="iniziale" value="[0, 1, 2, 5 ...]"/><br>
+      Step: <input id="step"/><br>
+      <textarea id="output" rows="10" cols="60">output</textarea>
+      <input type="button" id="crea" value="crea automa cellulare"/>
+      <input type="button" id="random" value="configurazioni iniziale casuale"/>
+    </fieldset>
+  </div>
+  <div>
+    <canvas id="outCan" width="500" height="500"></canvas>
+  </div>
+  <script>
+    document.getElementById("crea").addEventListener("click", crea);
+    document.getElementById("random").addEventListener("click", configRandom);
+  </script>
+
+</body>

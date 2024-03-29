@@ -1,0 +1,82 @@
+var sprite = (function() {
+
+    /*  Interface   */
+
+    var spritesInfo = [
+        new spriteInfo("mageWalkF", "mageWalkF", 5),
+        new spriteInfo("mageWalkB", "mageWalkB", 5),
+        new spriteInfo("mageStillF", "mageStillF", 2),
+        new spriteInfo("mageStillB", "mageStillB", 2),
+        new spriteInfo("mageJumpF", "mageJumpF", 1),
+        new spriteInfo("mageJumpB", "mageJumpB", 1),
+        new spriteInfo("mageFallF", "mageFallF", 2),
+        new spriteInfo("mageFallB", "mageFallB", 2),
+        new spriteInfo("mageBored", "mageBored", 3),
+        new spriteInfo("mageReadyF", "mageReadyF", 3),
+        new spriteInfo("mageReadyB", "mageReadyB", 3),
+        new spriteInfo("mageDeath", "mageDeath", 9),
+
+        new spriteInfo("goblinF", "goblinF", 2),
+        new spriteInfo("goblinB", "goblinB", 2),
+        new spriteInfo("zombieWalkF", "zombieWalkF", 5),
+        new spriteInfo("zombieWalkB", "zombieWalkB", 5),
+        new spriteInfo("zombiePushedF", "zombiePushedF", 2),
+        new spriteInfo("zombiePushedB", "zombiePushedB", 2),
+        new spriteInfo("ghostWalkF", "ghostWalkF", 5),
+        new spriteInfo("ghostWalkB", "ghostWalkB", 5),
+        new spriteInfo("ghostPushedF", "ghostPushedF", 2),
+        new spriteInfo("ghostPushedB", "ghostPushedB", 2),
+        new spriteInfo("enemyWalkF", "enemyWalkF", 5),
+        new spriteInfo("enemyWalkB", "enemyWalkB", 5),
+        new spriteInfo("enemyPushedF", "enemyPushedF", 2),
+        new spriteInfo("enemyPushedB", "enemyPushedB", 2),
+
+        new spriteInfo("key0", "key0", 1),
+        new spriteInfo("key1", "key1", 1),
+        new spriteInfo("key2", "key2", 1),
+        new spriteInfo("key3", "key3", 1),
+
+        new spriteInfo("Spine", "Spine", 1),
+        new spriteInfo("Platform", "Platform", 1),
+        new spriteInfo("Zombie", "Zombie", 1),
+        new spriteInfo("Goblin", "Goblin", 1),
+        new spriteInfo("Enemy", "Enemy", 1),
+        new spriteInfo("Ghost", "Ghost", 1),
+        new spriteInfo("Fire", "Fire", 1),
+        new spriteInfo("Key", "key0", 1),
+        new spriteInfo("Spine", "Spine", 1),
+        new spriteInfo("Gate", "Gate", 1),
+
+        new spriteInfo("burn", "burn", 3),
+        new spriteInfo("blink", "blink", 4)        
+    ];
+
+    function Sprite(name, img, frameNum) {
+        this.name = name;
+        this.img = img;
+        this.frameNum = frameNum;
+    };
+
+    function getSprites() {
+        return sprites;
+    };
+
+    /*  Implementation  */
+
+    var spriteDir = "sprites/";
+    var ext = ".gif";
+
+    var sprites = {};
+
+    function spriteInfo(name, path, frameNum) {
+        this.name = name;
+        this.url = "sprites/" + path + ".gif";
+        this.frameNum = frameNum;
+    };
+
+    return {
+        Sprite : Sprite,
+        spritesInfo : spritesInfo,
+        getSprites : getSprites,
+    };
+})();
