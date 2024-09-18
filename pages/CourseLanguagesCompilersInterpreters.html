@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cormorant" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville" rel="stylesheet">
+    <title>CourseLanguagesCompilersInterpreters</title>
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> 
+</head>
+<body>
+
+<div class='content'>
+	<div class="row title-frame">
+    	<div class="col-sm-10 name">
+        	<h1>Languages, Compilers and Interpreters (Cod. 653AA)</h1>
+            <h2>Master Course in Computer Science at UniPi</h2>
+        </div>
+		<div class="col-sm-2 IMT">
+			<img src="../images/Logo_IMT.png" alt="IMT" class='IMT'/>
+		</div>
+		<div class="col-sm-2 cherubino">
+		    <img src="../images/unipi.png" alt="unipi" class='cherubino'/>
+		</div>
+	</div> 
+
+	<div class='main'>
+		<div class='container'>
+		    <h2>Announcements</h2>
+		    <p>
+			The laboratory part of the course starts on Thursday 26th of September!
+			The first lecture will be an introduction to OCaml: please bring your laptop and install an OCaml compiler.
+		    </p>
+		</div>
+		<div class='container'>
+		    <h2>Course Outline</h2>
+		    <p>
+			This it the laboratory module of the course with the same name given by prof. Roberta Gori.
+			The objective is to put in practice what you will learn in the theoretical part of the course by implementing different (simple) programming languages.
+			The programming language adopted for the exercises and the project is OCaml. 
+			At the end of the course, the students who completed all the mandatory assignments will have developed a simple interpreter and a compiler.
+		    </p>
+			<h3> Syllabus </h3>
+			<ul>
+				<li> OCaml basics </li>
+				<li> Implementing the semantics of (simple) programming languages </li>
+				<li> Lexing and Parsing with ocamllex and menhir </li>
+				<li> Defining and enforcing a type system for a functional language </li>
+				<li> Compiling a simple imperative language </li>
+				<li> Implementing a simple data-flow analysis tool </li>
+			</ul>
+		</div>
+		<div class='container'>
+		    <h2>Resources (tools and bibliography)</h2>
+		    <ul>
+				<li>
+				<a href="https://ocaml.org/"> The OCaml language </a> 
+				</li>
+				<li>
+				<a href="https://ocaml.org/manual/5.2/api/index.html"> The OCaml API </a> 
+				</li>
+				<li>
+				<a href="https://opam.ocaml.org/"> OPAM  </a> (the OCaml packet manager)
+				</li>
+				<li>
+				<a href="https://github.com/ocaml-community/utop"> utop </a> is an improved toplevel (i.e., Read-Eval-Print Loop) for OCaml (not mandatory, but sometimes it is useful to try some code interactively. Install it via opam).
+				</li>
+				<li>
+				<a href="https://dune.build/"> Dune </a> (a build system for OCaml) : if you take some time to learn how to use it, it will simplify your life, but you can live without it, and it is not mandatory for the course 
+				</li>
+				<li>
+				The book <a href="https://dev.realworldocaml.org/"> Real World OCaml </a> by Yaron Minsky and Anil Madhavapeddy is our main reference for the basics of OCaml
+				</li>
+				<li>
+				<a href="https://ocaml.org/manual/5.2/lexyacc.html#s%3Aocamllex-overview"> OCamllex </a> : the lexer generator that we will use for lexing in our project (ignore ocamlyacc, we will use menhir)
+				</li>
+				<li>
+				<a href="http://gallium.inria.fr/~fpottier/menhir/"> Menhir </a> : the LR(1) parser generator that we will use for parsing in our project 
+				</li>
+				<li>
+				The section <a href="https://dev.realworldocaml.org/parsing-with-ocamllex-and-menhir.html"> Parsing with OCamllex and Menhir </a> from the aforementioned book <a href="https://dev.realworldocaml.org/"> Real World OCaml </a> gives you an overview of our lexing and parsing pipeline with some concrete examples
+				</li>
+				<li>
+				The book <a href="https://repository.unikom.ac.id/48769/1/Compilers%20-%20Principles%2C%20Techniques%2C%20and%20Tools%20%282006%29.pdf"> Compilers: Principles, Techniques, and Tools (2nd Edition)</a> by 
+Alfred V. Aho, Monica S. Lam, Ravi Sethi and Jeffrey D. Ullman is a well-known guide to compilers. 
+				I recommend using it in case of problems with the parsing phase
+				</li>
+				<li>
+				The book <a href="https://link.springer.com/book/10.1007/978-3-662-03811-6"> Principles of Program Analysis</a> by Flemming Nielson, Hanne R. Nielson and Chris Hankin is where to look for the static analysis section of our project
+				</li>
+		    </ul>
+		</div>
+		<div class='container'>
+		    <h2>Lessons</h2>
+		    <ul>
+				<li>
+					27/09 -- Introduction to OCaml: <a href="none"> slides </a>
+				</li>
+			</ul>
+		</div>
+		<div class='container'>
+		    <h2>Project Assignment</h2>
+		    <p>
+			At the end of the course, the students are required to submit some code and a report.
+			The project will be composed of different fragments, one for each topic of the course 
+			(please be aware that some of the fragments depend on others).
+			Ideally, each lesson targets a specific objective, like parsing a given language or implementing a static analysis tool,
+			and it gives some high-level indications on how to implement it in OCaml.
+			The assignment for the student is to follow the indications and produce the OCaml code.
+			Some minor details are left unspecified on purpose, requiring the students to solve them on their own ;).
+			My main suggestion for the code is to keep it as simple and declarative as possible, postponing optimization to the end.
+			The report must explain the choices of the student in solving the problems encountered while implementing the code (more details in the description of the tasks), and it must contain a guide on how to compile and execute the code.
+		    </p>
+		</div>
+	</div>
+</div>
+</body>
+</html> 
+
+
