@@ -1,0 +1,5 @@
+#to compile
+ocamlbuild -use-ocamlfind -use-menhir interpreter.native
+
+#to run
+./interpreter.native provacalc 
