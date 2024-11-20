@@ -20,10 +20,7 @@
 prg: 
     | t = trm; EOF               {t}
 trm:
-    | i = int                    {Intliteral i}
+    | i = INT                    {Intliteral i}
     | t1 = trm; PLUS; t2 = trm   {Plus (t1, t2)}
     | t1 = trm; MINUS; t2 = trm  {Minus (t1, t2)}
     | t1 = trm; TIMES; t2 = trm  {Times (t1, t2)}
-int:
-    | i = INT                    {i}
-    | MINUS; i = int             {-i}
