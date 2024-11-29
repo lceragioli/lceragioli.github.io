@@ -20,17 +20,29 @@
     border-bottom-style: solid;
     border-bottom-width: 5px;
     border-block-color: #4b4b4b;
-    font-size: 100%;
+    font-size: 210%;
     /* max-width: 400px; */
     /* width: 12cm; */   
     }
 }
 
-.me {
-    width: 179px;
-    border-style: solid;
-    border-color: #4b4b4b;
-    border-width: 3px;
+@media (orientation: landscape) {
+    .me {
+        width: 179px;
+        border-style: solid;
+        border-color: #4b4b4b;
+        border-width: 3px;
+    }
+}
+
+@media (orientation: portrait) {
+    .me {
+        width: 60%;
+        border-style: solid;
+        border-color: #4b4b4b;
+        border-width: 3px;
+        padding: 1px 5em;
+    }
 }
 
 body {
@@ -53,7 +65,7 @@ body {
 
 .about-me {
     font-style: italic;
-    max-width: 500px;
+    /* max-width: 500px; */
     padding: 10px;
 }
 
@@ -98,6 +110,7 @@ body {
 
 .name {
     flex-grow: 1;
+	font-size: 14pt;
 }
 
 .contacts {
@@ -107,7 +120,7 @@ body {
 }
 
 .legend {
-    font-weight: 500;
+    /* font-weight: 500; */
     padding-right: 30px;
 }
 
