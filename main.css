@@ -1,3 +1,21 @@
+table { width: 100%; }
+.content table th:first-child,
+.content table th:nth-child(2) {
+    white-space: nowrap; /* Forces the text onto a single line */
+    width: 1%;           /* Hints to the browser to make this column narrow */
+}
+/* Target the last <th> (the time/room) to take the remaining space */
+.content table th:last-child {
+    width: 97%; /* Tells this column to expand to fill the table */
+}
+
+/* On mobile (portrait), increase the font size of the table */
+@media (orientation: portrait) {
+    table {
+        font-size: 2em; /* You can adjust this value */
+    }
+}
+
 @media (orientation: landscape) {
 .info {
     float: right;
