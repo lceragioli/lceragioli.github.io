@@ -71,6 +71,14 @@ body {
     font-size: 100%;
 }
 
+.main {
+    padding: 0px 10px 0px 10px;
+    margin-bottom: 12px;
+    border-bottom-style: solid;
+    border-bottom-width: 5px;
+    border-block-color: #4b4b4b;
+}
+
 @media (orientation: landscape) {
 	.name h2 {
 		color: #4b4b4b;
