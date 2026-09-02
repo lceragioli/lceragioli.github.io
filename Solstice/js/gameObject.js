@@ -680,6 +680,7 @@ var gameObject = (function() {
         this.y = Math.floor(y);
         this.z = Math.floor(z);
         this.solid = true;
+        // this.size = {x: 30, y: 30, z: 50};
         this.size = {x: 30, y: 30, z: 50};
         this.v = {x: 0, y: 0, z: 0};
         this.jumpVel = 6;

@@ -576,101 +576,116 @@ var stage = (function() {
 
         this.draw = function(all, actualGameObjects) {
             var i;
-            var ct = game.getContext();
-			var cv = game.getCanvas();
-			var scale = game.getScale();
+                var ct = game.getContext();
+                var cv = game.getCanvas();
+                var scale = game.getScale();
 
-            ct.save();
+                ct.save();
 
-            if(all) {
-                ct.fillRect(0, 0, 2*totalWidth, 2*totalHeight);
-                game.getPlayer().draw(ct);                
-            }
-
-            ct.scale(1/scale, 1/scale);
-			ct.translate((cv.width - (totalWidth/scale))/2, (cv.height - (totalHeight/scale))/2);
-
-            /*  clipping    */
-            if(!all && this.light) {
-                var clip;
-
-                ct.beginPath();
-                for(i = 0; i < actualGameObjects.length; i++) {
-                    if(actualGameObjects[i].clipRect != null) {
-                        clip = actualGameObjects[i].clipRect;
-                        ct.rect(Math.floor(clip.x), Math.floor(clip.y), Math.ceil(clip.width), Math.ceil(clip.height));
-                    }
+                // Clear canvas background when invalidating the full scene
+                if(all) {
+                    ct.fillStyle = "#000000";
+                    ct.fillRect(0, 0, cv.width, cv.height);
                 }
-                ct.clip();
-            }
-            else if(!this.light) {
-                /*  backGround  */    
+
+                // Multiply translation by scale so coordinates land on integer screen pixels
+                var translateX = Math.floor((cv.width - totalWidth / scale) / 2);
+                var translateY = Math.floor((cv.height - totalHeight / scale) / 2);
+
+                ct.translate(translateX * scale, translateY * scale);
+                ct.scale(1 / scale, 1 / scale);
+
+                /* clipping */
+                if(!all && this.light) {
+                    var clip;
+
+                    ct.beginPath();
+                    for(i = 0; i < actualGameObjects.length; i++) {
+                        if(actualGameObjects[i].clipRect != null) {
+                            clip = actualGameObjects[i].clipRect;
+                            // Add a small 2px margin to prevent subpixel edge bleed when scaled
+                            ct.rect(
+                                Math.floor(clip.x - 2), 
+                                Math.floor(clip.y - 2), 
+                                Math.ceil(clip.width + 4), 
+                                Math.ceil(clip.height + 4)
+                            );
+                        }
+                    }
+                    ct.clip();
+                }
+                else if(!this.light) {
+                    /* backGround */    
+                    ct.fillStyle = "#000000";
+                    ct.fillRect(0, 0, totalWidth, totalHeight);
+
+                    var l;
+                    var lightPoint;
+
+                    ct.beginPath();
+                    for(i = 0; i < actualGameObjects.length; i++) {
+                        if(actualGameObjects[i].light != null) {
+                            l = actualGameObjects[i].light;
+                            lightPoint = w2v(l.x, l.y, l.z);
+                            ct.arc(lightPoint.x, lightPoint.y, l.radius, 0, 2 * Math.PI);
+                            ct.closePath();
+                        }
+                    }
+                    ct.clip();
+                }
+
+                /* backGround */
                 ct.fillStyle = "#000000";
-                ct.fillRect(0, 0, 2*totalWidth, 2*totalHeight);
-                game.getPlayer().draw(ct);
+                ct.fillRect(0, 0, totalWidth, totalHeight);
 
-                var l;
-                var lightPoint;
+                /* gameObject record */
+                var go;
+                var objectToDraw = {};
 
-                ct.beginPath();
                 for(i = 0; i < actualGameObjects.length; i++) {
-                    if(actualGameObjects[i].light != null) {
-                        l = actualGameObjects[i].light;
-                        lightPoint = w2v(l.x, l.y, l.z);
-                        ct.arc(lightPoint.x, lightPoint.y, l.radius, 0, 2 * Math.PI);
-                        ct.closePath();
+                    go = actualGameObjects[i];
+                    var d = depth(go);
+                    if(objectToDraw[d]) {
+                        objectToDraw[d].push(go);
+                    }
+                    else {
+                        objectToDraw[d] = [go];
                     }
                 }
-                ct.clip();
-            }
 
-            /*  backGround  */
-            ct.fillStyle = "#000000";
-            ct.fillRect(0, 0, 2*totalWidth, 2*totalHeight);
-    
-            /*  gameObject record   */
-            var go;
-            var objectToDraw = {};
+                /* cells and gameObjects drawing */
+                var cell;
+                var d;
+                var z;
+                var y;
+                var x;
+                var view;
 
-            for(i = 0; i < actualGameObjects.length; i++) {
-                go = actualGameObjects[i];
-                var d = depth(go);
-                if(objectToDraw[d]) {
-                    objectToDraw[d].push(go);
-                }
-                else {
-                    objectToDraw[d] = [go];
-                }
-            }
-
-            /*  cells and gameObjects drawing   */
-            var cell;
-            var d;
-            var z;
-            var y;
-            var x;
-            var view;
-
-            for(d = 0; d < zCellsNum + xCellsNum + yCellsNum; d++) {
-                for(z = 0; z <= d; z++) {
-                    for(y = 0; y + z <= d; y++) {
-                        x = d - z - y;
-                        if(cell = this.getCell(x, y, z)) {
-                            if(cell.image && cell.name != "noInvisible") {
-                                view = w2v(x * cellSize, y * cellSize, z * cellSize); 
-                                ct.drawImage(cell.image, view.x - Math.ceil(tile.tileWidth / 2), view.y - Math.ceil(tile.tileHeight / 2), cell.image.width, cell.image.height);
+                for(d = 0; d < zCellsNum + xCellsNum + yCellsNum; d++) {
+                    for(z = 0; z <= d; z++) {
+                        for(y = 0; y + z <= d; y++) {
+                            x = d - z - y;
+                            if(cell = this.getCell(x, y, z)) {
+                                if(cell.image && cell.name != "noInvisible") {
+                                    view = w2v(x * cellSize, y * cellSize, z * cellSize); 
+                                    ct.drawImage(
+                                        cell.image, 
+                                        view.x - Math.ceil(tile.tileWidth / 2), 
+                                        view.y - Math.ceil(tile.tileHeight / 2), 
+                                        cell.image.width, 
+                                        cell.image.height);
+                                }
                             }
                         }
                     }
-                }
-                if(objectToDraw[d]) {
-                    for(i = 0; i < objectToDraw[d].length; i++) {
-                        objectToDraw[d][i].draw(ct);
+                    if(objectToDraw[d]) {
+                        for(i = 0; i < objectToDraw[d].length; i++) {
+                            objectToDraw[d][i].draw(ct);
+                        }
                     }
                 }
-            }
 
-            ct.restore();
+                ct.restore();
         };
 
         this.getCell = function(x, y, z) {

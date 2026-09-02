@@ -33,10 +33,15 @@ function Game() {
     if(!ctx){
          alert("Il tuo browser non supporta HTML5, aggiornalo!");
     }        
-    div.style.width = "1024px";
-    div.style.height = "600px"
-    canvas.setAttribute("width","1024");
-    canvas.setAttribute("height","600");
+    // div.style.width = "1024px";
+    // div.style.height = "600px"
+    // canvas.setAttribute("width","1024");
+    // canvas.setAttribute("height","600");
+    div.style.width = "1330px";
+    div.style.height = "1080px"
+    canvas.setAttribute("width","1330");
+    canvas.setAttribute("height","1080");
+
     canvas.defaultWidth = canvas.width;
     canvas.defaultHeight = canvas.height;
     canvas.style.cursor = "none";
@@ -320,8 +325,10 @@ function Game() {
         if(canvas.isFullscreen) {
             div.style.width = canvas.defaultWidth + "px";
             div.style.height = canvas.defaultHeight + "px";
-            canvas.setAttribute("width","1024");
-            canvas.setAttribute("height","600");
+            canvas.setAttribute("width","1330");
+            canvas.setAttribute("height","1080");
+            // canvas.setAttribute("width","1024");
+            // canvas.setAttribute("height","600");
             scale = Math.ceil(Math.max(stage.totalWidth/canvas.width, stage.totalHeight/canvas.height));
             invalidatedScene = true;
             canvas.isFullscreen = false;
