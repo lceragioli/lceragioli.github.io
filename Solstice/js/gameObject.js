@@ -1223,16 +1223,55 @@ var gameObject = (function() {
             ctx.restore();
         };
 
+        this.getDrawBounds = function(view) {
+            var bounds = {
+                x: view.x - Math.ceil(this.width / 2),
+                y: Math.floor(view.y),
+                width: Math.ceil(this.width),
+                height: Math.ceil(this.height)
+            };
+
+            if(this.effect) {
+                var effectWidth = Math.floor(sprite.getSprites()[this.effect].img.width / sprite.getSprites()[this.effect].frameNum);
+                var effectHeight = sprite.getSprites()[this.effect].img.height;
+                var dx;
+                var dy;
+
+                if(this.effect == "burn") {
+                    dx = (this.direction.side == "F") ? -7 : 32;
+                    dy = (this.direction.side == "F") ? 6 : 8;
+                }
+                else {
+                    dx = (this.direction.side == "F") ? -4 : 32;
+                    dy = (this.direction.side == "F") ? -9 : 2;
+                }
+
+                var effectX = view.x - Math.ceil(this.width / 2) + dx;
+                if(this.direction.scaling < 0) {
+                    effectX = view.x - Math.ceil(this.width / 2) - dx - effectWidth;
+                }
+
+                bounds.x = Math.min(bounds.x, effectX);
+                bounds.y = Math.min(bounds.y, Math.floor(view.y) + dy);
+                bounds.width = Math.max(bounds.x + bounds.width, effectX + effectWidth) - bounds.x;
+                bounds.height = Math.max(bounds.y + bounds.height, Math.floor(view.y) + dy + effectHeight) - bounds.y;
+            }
+
+            return bounds;
+        };
+
         this.updateClipRect = function(preview) {
             if(this.visible) {
-                var dx = (this.effect != null) ? Math.floor(sprite.getSprites()[this.effect].img.width / sprite.getSprites()[this.effect].frameNum) : 0;
-                var dy = (this.effect != null) ? sprite.getSprites()[this.effect].img.height : 0;
-
                 this.view = stage.w2v(Math.floor(this.x - this.size.x/2), Math.floor(this.y - this.size.y/2), this.z + this.size.z);
-                this.clipRect.x = Math.min(this.view.x, preview.x) - Math.ceil(this.width/2) - 2 - dx;
-                this.clipRect.y = Math.min(this.view.y, preview.y) - 2 - dy;
-                this.clipRect.width = Math.abs(this.view.x - preview.x) + this.width + 6 + 2*dx;
-                this.clipRect.height = Math.abs(this.view.y - preview.y) + this.height + 6 + 2*dy;
+                var currentBounds = this.getDrawBounds(this.view);
+                var previousBounds = this.getDrawBounds(preview);
+                var right = Math.max(currentBounds.x + currentBounds.width, previousBounds.x + previousBounds.width);
+                var bottom = Math.max(currentBounds.y + currentBounds.height, previousBounds.y + previousBounds.height);
+
+                this.clipRect.x = Math.min(currentBounds.x, previousBounds.x) - 2;
+                this.clipRect.y = Math.min(currentBounds.y, previousBounds.y) - 2;
+                this.clipRect.width = right - this.clipRect.x + 2;
+                this.clipRect.height = bottom - this.clipRect.y + 2;
             };
         };
 
