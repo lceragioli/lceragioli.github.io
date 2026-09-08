@@ -5,14 +5,31 @@
 
 body {
     background-color: #000000;
+    margin: 0;
 }
 
 canvas {
+    display: block;
     outline: none;
+}
+
+#gameCanvas {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+#gameCanvas:fullscreen,
+#gameCanvas:-webkit-full-screen {
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
 }
 
 #gameDiv {
     position: static;
+    width: min(100vw, calc(100vh * 1330 / 1080));
+    height: auto;
     margin: 0;
     padding-left: 0;
     padding-right: 0;

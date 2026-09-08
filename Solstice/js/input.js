@@ -34,6 +34,13 @@ var input = (function() {
         var key = [];
         var keyPress = [];
         var keyRel= [];
+
+        function setPointerPosition(clientX, clientY) {
+            var canvas = gm.getCanvas();
+            var bounds = canvas.getBoundingClientRect();
+            mouseX = Math.round((clientX - bounds.left) * canvas.width / bounds.width);
+            mouseY = Math.round((clientY - bounds.top) * canvas.height / bounds.height);
+        }
 	
 	
         window.addEventListener("keydown", function(e) {
@@ -61,8 +68,7 @@ var input = (function() {
 
         window.addEventListener("mousemove", function(e) {
 	        mouseMoved = true;
-	        mouseX = Math.round(e.pageX - gm.getCanvas().offsetLeft );
-	        mouseY = Math.round(e.pageY - gm.getCanvas().offsetTop );
+            setPointerPosition(e.clientX, e.clientY);
         }, false);
 
         window.addEventListener("mousedown", function(e) { 
@@ -100,9 +106,10 @@ var input = (function() {
         }, false);
 
 
-        window.addEventListener("touchmove", function(s) {
-	        mouseX = Math.round(s.pageX - gm.ctx.getCanvas().offsetLeft );
-	        mouseY = Math.round(s.pageY - gm.ctx.getCanvas().offsetTop );
+        window.addEventListener("touchmove", function(e) {
+            if(e.touches.length > 0) {
+                setPointerPosition(e.touches[0].clientX, e.touches[0].clientY);
+            }
         }, false);
 
         window.addEventListener("touchstart", function(e) { 

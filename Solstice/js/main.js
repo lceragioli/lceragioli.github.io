@@ -33,12 +33,6 @@ function Game() {
     if(!ctx){
          alert("Il tuo browser non supporta HTML5, aggiornalo!");
     }        
-    // div.style.width = "1024px";
-    // div.style.height = "600px"
-    // canvas.setAttribute("width","1024");
-    // canvas.setAttribute("height","600");
-    div.style.width = "1330px";
-    div.style.height = "1080px"
     canvas.setAttribute("width","1330");
     canvas.setAttribute("height","1080");
 
@@ -46,6 +40,10 @@ function Game() {
     canvas.defaultHeight = canvas.height;
     canvas.style.cursor = "none";
     canvas.isFullscreen = false;
+
+    window.addEventListener("resize", function() {
+        invalidatedScene = true;
+    }, false);
 
     /*  Problemi scala dimensione canvas    */
     //ctx.imageSmoothingEnabled = false;
@@ -310,12 +308,6 @@ function Game() {
 
     function setFullscreen() {
         if(!canvas.isFullscreen) {
-            var ratio = canvas.defaultHeight / canvas.defaultWidth;
-            div.style.width = screen.width + "px";
-            div.style.height = screen.height + "px";
-            canvas.setAttribute("width", screen.width);
-            canvas.setAttribute("height", screen.height);
-            scale = Math.ceil(Math.max(stage.totalWidth/canvas.width, stage.totalHeight/canvas.height));
             invalidatedScene = true;
             canvas.isFullscreen = true;
         }
@@ -323,13 +315,8 @@ function Game() {
 
     function cancFullscreen() {
         if(canvas.isFullscreen) {
-            div.style.width = canvas.defaultWidth + "px";
-            div.style.height = canvas.defaultHeight + "px";
-            canvas.setAttribute("width","1330");
-            canvas.setAttribute("height","1080");
-            // canvas.setAttribute("width","1024");
-            // canvas.setAttribute("height","600");
-            scale = Math.ceil(Math.max(stage.totalWidth/canvas.width, stage.totalHeight/canvas.height));
+            div.style.width = "";
+            div.style.height = "";
             invalidatedScene = true;
             canvas.isFullscreen = false;
         }
